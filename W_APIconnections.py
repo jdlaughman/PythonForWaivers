@@ -1,5 +1,5 @@
 #Objective: demonstrate ability to understand API documentation (here, Microsoft Azure) and connect to APIs
-#Note: Code will not execute successfully because personal API Key and subscription key (for speech recognition) are not provided
+#Note: Code will not execute successfully because personal API Key is not provided within code
 
 #import modules
 #import module to use POST with Microsoft APIs
@@ -37,7 +37,7 @@ image_data = open(image_path, "rb").read()
 
 
 
-#Call API and siplay results
+#Call API and diplay results
 #Use HTTP POST for call
 response = requests.post(address_analyze, headers=headers, params=parameters, data=image_data)
 
@@ -55,7 +55,7 @@ method_detail_describe = "vision/v1.0/describe"
 #Complete API URL address (reuses service endpoint)
 address_describe = service_endpoint + method_detail_describe
 
-#Call API and siplay results
+#Call API and diplay results
 #Use HTTP POST for call (note that "headers" and "data" are reused while "params" is not defined this time)
 response_describe = requests.post(address_describe, headers=headers, data=image_data)
 
