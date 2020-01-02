@@ -5,12 +5,12 @@ This repository is a list of python exercies to demonstrate a basic proficiency 
 
 Short explanation of each file follows below
 
-GenerateDice.py - Use lists, for loops and while to create virtual set of dice that can be rerolled
+W_GenerateDice.py - Use lists, for loops and while to create virtual set of dice that can be rerolled
 
-CharacterCreateClass.py - Use classes and dictionaries to create a role-playing character that battles a randomly selected enemy
+W_SimpleRPG.py - Use classes and dictionaries to create a role-playing character that battles a randomly selected enemy
 
-NormalEquationForLinear.py - Use matrix multiplicaiton via numpy module and matplotlib to caluclate linear regression intercept and coefficient
+W_NormalEquationForLinear.py - Use matrix multiplicaiton via numpy module and matplotlib to caluclate linear regression intercept and coefficient
 
-SciKitForLinear.py - Use sklearn module to generate same linear regressino output as NormalEquationForLinear.py
+W_SciKitForLinear.py - Use sklearn module to generate same linear regressino output as NormalEquationForLinear.py
 
-APIconnections.py - Demonstrate ability to read API documentaiton and use requests modules to interact with Microsoft Azure
+W_APIconnections.py - Demonstrate ability to read API documentaiton and use requests modules to interact with Microsoft Azure
