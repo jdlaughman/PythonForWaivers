@@ -24,7 +24,7 @@ X_mat = np.append(X_ones, X,axis=1)
 
 
 
-#implement normal equation to solve for theta (or coefficients)
+#implement normal equation to solve for theta (coefficients)
 #normal equation = (1 / (X_mat transposed * X_mat)) * (X_mat transpose * y)
 Regression_Mat=np.dot(np.linalg.inv(np.dot(X_mat.T,X_mat)),np.dot(X_mat.T,y))
 
