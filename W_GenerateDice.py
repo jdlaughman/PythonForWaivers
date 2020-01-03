@@ -37,7 +37,7 @@ for i in range(total_dice_count):
     
     print(DiceSideQuetion,i+1,"?")
     
-    #try and except in case whole number greater than zero not provided for number of sides (dice of side 1 is allowed even though is nonsensical)
+    #try and except in case whole number greater than zero not provided for number of sides (minimum of 4)
     try:
         die_generic_NumSides = int(input())
 
