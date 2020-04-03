@@ -1,4 +1,5 @@
 #Objective: Demonstrate a simple role-playing-game (RPG) battle that uses classes to create a character for each instance
+#Classes (with inheritance) are also used to create the enemy
 
 #Notes on some of the variables
 #Attack Points (AP) are the base amount of damage a character produces from a basic (non-magic) attack
@@ -86,6 +87,7 @@ class EnemyCreate:
         #there is no chance to block so enemy takes damage equal to AttackReceived
         print("You strike the enemy and deliver the damage")
         self.DamageApplied = AttackReceived
+        self.EnemyHP = max(0,self.EnemyHP - self.DamageApplied)
         return self.DamageApplied
 
 
@@ -103,7 +105,7 @@ class EnemyCreateWithShield(EnemyCreate):
             #attack is blocked by shield
             print("Attack is blocked by enemy shield!  No damage dealt!")
             self.DamageApplied = 0
-            return self.DamageApplied
+            self.EnemyHP = max(0,self.EnemyHP - self.DamageApplied)
         else:
             return super().EnemyDamageTaken(AttackReceived)
 
@@ -145,7 +147,7 @@ initiate_battle=input(f"Send {RPGOutput_Character01.name} to battle?  (y = yes)"
 #Define logic that occurs if user chooses to go to battle (with "y" or "yes" response) or chooses to skip battle
 if initiate_battle.lower() in ["yes","y"]:
 
-    #Create an enemy by selecting randomly from the enemy dictionary
+    #Create an enemy by selecting randomly from the enemy dictionary  (This could be done outside of if but enemy not generated if no battle)
     EnemySelect = random.choice(list(enemy_dict.keys()))
     
     #Grab starting HP of enemy and its attack range
@@ -157,11 +159,11 @@ if initiate_battle.lower() in ["yes","y"]:
     #Create enemy using class.  Introduce chance enemy has a shield
     EnemyHasShield=False
 
-    if random.random() <= 0.40:
+    if random.random() <= 0.40:   #Determine if enemy will have a shield.  If so, use "sub" class with inheritance that supports shield
         EnemyHasShield=True
         EnemyOpponent = EnemyCreateWithShield(EnemySelect,EnemyBattleHP,EnemyBaseDamage, EnemyLowModify, EnemyHighModify,0.25)
 
-    else:
+    else:  #use "base" class that has no concept of enemy shield
         EnemyOpponent = EnemyCreate(EnemySelect,EnemyBattleHP,EnemyBaseDamage, EnemyLowModify, EnemyHighModify)
 
 
@@ -171,14 +173,14 @@ if initiate_battle.lower() in ["yes","y"]:
     
     #The battle begins!!
     print("\nAn enemy appears!")
-    print(f"It is a {EnemySelect}")
+    print(f"It is a {EnemyOpponent.EnemyName}")
     if EnemyHasShield:
         print("...and it has a shield!")
     print("The enemy's HP and AP is unknown")
     print(f"\nYour starting HP total is {PlayerBattleHP}")
 
     #check current hit points
-    while  PlayerBattleHP > 0 and EnemyBattleHP > 0:
+    while  PlayerBattleHP > 0 and EnemyOpponent.EnemyHP > 0:
 
         #choose attack
         print("You prepare to attack")
@@ -196,18 +198,18 @@ if initiate_battle.lower() in ["yes","y"]:
             print(f"Attempted magic damage deal to enemy: {AttackAmt}")
         
         #calculate enemy's remaining HP
-        EnemyBattleHP = EnemyBattleHP - EnemyOpponent.EnemyDamageTaken(AttackAmt)
+        EnemyOpponent.EnemyDamageTaken(AttackAmt)
 
         #Determine if enemy is defeated (HP at zero) or enemy survives and responds with an attack
-        if EnemyBattleHP <= 0:
-            print(f"The {EnemySelect} is defeated")
+        if EnemyOpponent.EnemyHP <= 0:
+            print(f"The {EnemyOpponent.EnemyName} is defeated")
             break
         else:
-            print(f"The {EnemySelect} remains alive")
-            print(f"\nThe {EnemySelect} attacks!")
+            print(f"The {EnemyOpponent.EnemyName} remains alive")
+            print(f"\nThe {EnemyOpponent.EnemyName} attacks!")
             EnemyAttackAmt = EnemyOpponent.EnemyAttack(EnemyBaseDamage,EnemyLowModify,EnemyHighModify)
             suspense_build("...") #delaying until the attack damage is displayed to give appearance of attack being in progress
-            print(f"The {EnemySelect} deals total damage of {EnemyAttackAmt}")
+            print(f"The {EnemyOpponent.EnemyName} deals total damage of {EnemyAttackAmt}")
             
             #Determine if user is defeated (HP at zero) or survives
             PlayerBattleHP = PlayerBattleHP - EnemyAttackAmt
