@@ -5,12 +5,13 @@ This repository is a list of python exercies to demonstrate a basic proficiency 
 
 All examples can be executed as working code in any IDE that supports python (Visual Studio Code, PyCharm, etc) *except* for the API example. The API example will not execute because the API key was ommitted.  Also, no image / image file path is included.
 
-Short explanation of each file follows below
+Short explanation of each file follows below:
 
 W_GenerateDice.py - Use lists, for loops and while to create virtual set of dice that can be rerolled
 
-W_SimpleRPG.py - Use classes and dictionaries to create a role-playing character that battles a randomly selected enemy
-W_SimpleRPG_inheritcance.py - Updated version of SimpleRPG that incorporates additonal uses of classes with inheritcance to create enemy.  Also generally has more references to class objects throughout code
+W_SimpleRPG_inheritcance.py - [Current version of simple RPG] Updated version of SimpleRPG that incorporates additonal uses of classes with inheritcance to create enemy.  Also generally has more references to class objects throughout code
+
+W_SimpleRPG.py - [Old version of simple RPG] Use classes and dictionaries to create a role-playing character that battles a randomly selected enemy
 
 W_NormalEquationForLinear.py - Use matrix multiplicaiton via numpy module and matplotlib to caluclate and display linear regression intercept and coefficient.  The output focuses on plotting a chart that includes the intercept and coefficient.
 
