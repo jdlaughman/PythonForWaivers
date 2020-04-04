@@ -1,5 +1,5 @@
 #Objective: Demonstrate a simple role-playing-game (RPG) battle that uses classes to create a character for each instance
-#Classes (with inheritance) are also used to create the enemy
+#Classes with inheritance are also used to create the enemy
 
 #Notes on some of the variables
 #Attack Points (AP) are the base amount of damage a character produces from a basic (non-magic) attack
@@ -59,6 +59,11 @@ class RPGCharacterCreate:
         dmg_mp=self.MP + np.random.randint(20,81,1)  #each damage roll for attack is character's MP + a random bonus of 20 to 80
         return dmg_mp
 
+    #method: damage taken from enemy
+    def CharDamageTaken(self,DamageReceived):
+        self.DamageReceived = DamageReceived
+        #print("You strike the enemy and deliver the damage")
+        self.HP = max(0,self.HP - self.DamageReceived)
 
 
 #Define details to create an enemy character
@@ -84,10 +89,17 @@ class EnemyCreate:
 
     #Define enemy defend as a method
     def EnemyDamageTaken(self,AttackReceived):
-        #there is no chance to block so enemy takes damage equal to AttackReceived
-        print("You strike the enemy and deliver the damage")
+        
         self.DamageApplied = AttackReceived
-        self.EnemyHP = max(0,self.EnemyHP - self.DamageApplied)
+
+        if self.DamageApplied == 0:  # allows for passing in no dmaage situations such as damage from shield, dodging, etc
+            print("No damage dealt!")
+        
+        else:
+            print("You strike the enemy and deliver the damage")
+            self.DamageApplied = AttackReceived
+            self.EnemyHP = max(0,self.EnemyHP - self.DamageApplied)
+        
         return self.DamageApplied
 
 
@@ -98,16 +110,15 @@ class EnemyCreateWithShield(EnemyCreate):
         self.ShieldBlockPct = ShieldBlockPct
 
 
-    #Define enemy defend with shield as a method
+    #Define enemy defend with shield as a method and then call the base class method of same name
     def EnemyDamageTaken(self,AttackReceived):   #consider adding magic attack always passes through shield
         #there is a chance the attack is blocked
         if random.random() <= self.ShieldBlockPct:
             #attack is blocked by shield
-            print("Attack is blocked by enemy shield!  No damage dealt!")
-            self.DamageApplied = 0
-            self.EnemyHP = max(0,self.EnemyHP - self.DamageApplied)
-        else:
-            return super().EnemyDamageTaken(AttackReceived)
+            print("Attack is blocked by enemy shield!")
+            AttackReceived = 0
+        
+        return super().EnemyDamageTaken(AttackReceived)
 
 
 
@@ -156,20 +167,20 @@ if initiate_battle.lower() in ["yes","y"]:
     EnemyLowModify = enemy_dict[EnemySelect][2]
     EnemyHighModify = enemy_dict[EnemySelect][3]
 
-    #Create enemy using class.  Introduce chance enemy has a shield
-    EnemyHasShield=False
+    #Create the enemy using classes.  Introduce chance that the enemy has a shield
+    EnemyHasShield = False  #Set default to no shield
+    ShieldChanceToBlock = 0.30 #Probability of shield successfully blocking attack if have shield
 
-    if random.random() <= 0.40:   #Determine if enemy will have a shield.  If so, use "sub" class with inheritance that supports shield
+    if random.random() <= 0.40:   #Determine if enemy will have a shield.  If so, use "sub" class with inheritance that supports shield with a block percentage
         EnemyHasShield=True
-        EnemyOpponent = EnemyCreateWithShield(EnemySelect,EnemyBattleHP,EnemyBaseDamage, EnemyLowModify, EnemyHighModify,0.25)
+        EnemyOpponent = EnemyCreateWithShield(EnemySelect,EnemyBattleHP,EnemyBaseDamage, EnemyLowModify, EnemyHighModify,ShieldChanceToBlock)
 
     else:  #use "base" class that has no concept of enemy shield
         EnemyOpponent = EnemyCreate(EnemySelect,EnemyBattleHP,EnemyBaseDamage, EnemyLowModify, EnemyHighModify)
 
 
-
-    #Set starting HP of player
-    PlayerBattleHP=RPGOutput_Character01.HP
+    #####Set starting HP of player
+    ####PlayerBattleHP=RPGOutput_Character01.HP
     
     #The battle begins!!
     print("\nAn enemy appears!")
@@ -177,10 +188,10 @@ if initiate_battle.lower() in ["yes","y"]:
     if EnemyHasShield:
         print("...and it has a shield!")
     print("The enemy's HP and AP is unknown")
-    print(f"\nYour starting HP total is {PlayerBattleHP}")
+    print(f"\nYour starting HP total is {RPGOutput_Character01.HP}")
 
     #check current hit points
-    while  PlayerBattleHP > 0 and EnemyOpponent.EnemyHP > 0:
+    while  RPGOutput_Character01.HP > 0 and EnemyOpponent.EnemyHP > 0:
 
         #choose attack
         print("You prepare to attack")
@@ -197,7 +208,7 @@ if initiate_battle.lower() in ["yes","y"]:
             AttackAmt = RPGOutput_Character01.CharAttack_mp()
             print(f"Attempted magic damage deal to enemy: {AttackAmt}")
         
-        #calculate enemy's remaining HP
+        #calculate if enemy takes damage and its remaining HP
         EnemyOpponent.EnemyDamageTaken(AttackAmt)
 
         #Determine if enemy is defeated (HP at zero) or enemy survives and responds with an attack
@@ -211,14 +222,16 @@ if initiate_battle.lower() in ["yes","y"]:
             suspense_build("...") #delaying until the attack damage is displayed to give appearance of attack being in progress
             print(f"The {EnemyOpponent.EnemyName} deals total damage of {EnemyAttackAmt}")
             
-            #Determine if user is defeated (HP at zero) or survives
-            PlayerBattleHP = PlayerBattleHP - EnemyAttackAmt
 
-            if PlayerBattleHP <= 0:
+            #Apply Enemy Attack to modify Hero's HP...
+            RPGOutput_Character01.CharDamageTaken(EnemyAttackAmt)
+
+            #...and dtermine if Hero is still alive
+            if RPGOutput_Character01.HP <= 0:
                 print("Your HP has fallen to zero.  You are defeated")
                 break
 
-        print(f"Your current HP total is {PlayerBattleHP}")
+        print(f"Your current HP total is {RPGOutput_Character01.HP}")
 
 
         print("\n")
