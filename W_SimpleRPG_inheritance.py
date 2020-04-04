@@ -39,25 +39,22 @@ class RPGCharacterCreate:
             self.ClassDescribe = "Balance"
             
 
-    ##define methods for class
     #method: state the character details
     def CharDetails(self):
         print(f"I am a {self.ClassDescribe} class with {self.AP}AP and {self.MP}MP.  You may call me, {self.name}")
-        
-    ##method: same function as above but using return instead of print to show different implementation approach
-    #def CharDetailsRtn(self):
-    #    return f"I am a {self.CharType} class with {self.AP}AP and {self.MP}MP.  You may call me {self.name}"
-      
+
 
     #method: attack damage from basic attack
     def CharAttack_ap(self):
         dmg_ap=self.AP + np.random.randint(0,21,1)  #each damage roll for attack is character's AP + a random bonus of 0 to 20
         return dmg_ap
 
+
     #method: attack damage from magic attack
     def CharAttack_mp(self):
         dmg_mp=self.MP + np.random.randint(20,81,1)  #each damage roll for attack is character's MP + a random bonus of 20 to 80
         return dmg_mp
+
 
     #method: hero damage taken
     def CharDamageTaken(self,DamageReceived):
@@ -66,7 +63,7 @@ class RPGCharacterCreate:
 
 
 
-#Define an enemy class with methods for attack and defend
+#create class: Define an enemy class with methods for attack and defend
 class EnemyCreate:
     def __init__(self,EnemyName,EnemyHP,EnemyBaseDamage,EnemyExtraDamageLow,EnemyExtraDamageHigh):
         self.EnemyName = EnemyName
@@ -75,12 +72,14 @@ class EnemyCreate:
         self.EnemyExtraDamageLow = EnemyExtraDamageLow
         self.EnemyExtraDamageHigh = EnemyExtraDamageHigh
 
+
     #method: enemy attack
     def EnemyAttack(self,base,modifier_low, modifier_high):
         self.base = base
         self.modifier_low = modifier_low
         self.modifier_high = modifier_high
         return self.base + np.random.randint(self.modifier_low,self.modifier_high,1)
+
 
     #method: enemy damage taken
     def EnemyDamageTaken(self,AttackReceived):
@@ -98,7 +97,7 @@ class EnemyCreate:
         return self.DamageApplied
 
 
-#Define an enemy class sub with inheritance that adds a shield
+#create class: Define an enemy class sub using inheritance that adds a shield attribute and the chance to take no damage
 class EnemyCreateWithShield(EnemyCreate):
     def __init__(self,EnemyName,EnemyHP,EnemyBaseDamage,EnemyExtraDamageLow,EnemyExtraDamageHigh,ShieldBlockPct):
         super().__init__(EnemyName,EnemyHP,EnemyBaseDamage,EnemyExtraDamageLow,EnemyExtraDamageHigh)
@@ -106,7 +105,8 @@ class EnemyCreateWithShield(EnemyCreate):
 
 
     #method: enemy damage taken with chance to defend from shield
-    def EnemyDamageTaken(self,AttackReceived):   #consider adding magic attack always passes through shield
+    def EnemyDamageTaken(self,AttackReceived):   #could consider adding magic attack always passes through shield
+
         #there is a chance the attack is blocked
         if random.random() <= self.ShieldBlockPct:
             #attack is blocked by shield
@@ -115,6 +115,9 @@ class EnemyCreateWithShield(EnemyCreate):
         
         return super().EnemyDamageTaken(AttackReceived)
 
+
+#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)values are HP, base damage, additional damage low, additional damage high
+enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  
 
 
 #Define function that delays the time to show the result of an action (such as waiting to see how much attack damage is caused)
@@ -127,13 +130,7 @@ def suspense_build(suspense_message):
     print()
 
 
-#Define details to create an enemy character
-#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)values are HP, base damage, additional damage low, additional damage high
-enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  
-
-
-
-##Gather details from user to create character to then invoke class creation
+##Gather details from user to invoke character creation
 #collect character name with a character limit
 char_limit=20  #set character limit (here, 20)
 RPGInput_Name=input(f"Provide a character name ({char_limit} char limit):")
@@ -152,13 +149,12 @@ RPGOutput_Character01.CharDetails()
 
 
 ##Have user decide if want to send the character to battle
-#Request yes or no for value of battle initiation variable
 initiate_battle=input(f"Send {RPGOutput_Character01.name} to battle?  (y = yes)")
 
 #Define logic that occurs if user chooses to go to battle (with "y" or "yes" response) or chooses to skip battle
 if initiate_battle.lower() in ["yes","y"]:
 
-    #Create an enemy by selecting randomly from the enemy dictionary  (This could be done outside of if but enemy not generated if no battle)
+    #Create an enemy by selecting randomly from the enemy dictionary  (Note: This could be done outside of if but enemy does not need to be generated if no battle)
     EnemySelect = random.choice(list(enemy_dict.keys()))
     
     #Grab starting HP of enemy and its attack range
