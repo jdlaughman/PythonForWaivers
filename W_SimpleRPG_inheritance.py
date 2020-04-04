@@ -128,8 +128,8 @@ def suspense_build(suspense_message):
 
 
 #Define details to create an enemy character
-#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)
-enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  #values are HP, base damage, additional damage low, additional damage high
+#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)values are HP, base damage, additional damage low, additional damage high
+enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  
 
 
 
