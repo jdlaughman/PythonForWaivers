@@ -27,7 +27,7 @@ class RPGCharacterCreate:
         elif CharType.lower() in ["mage","m"]:
             self.AP = 40
             self.MP = 80
-            self.HP = 400
+            self.HP = 500
             self.ClassDescribe = "Mage"
     
 
@@ -59,16 +59,11 @@ class RPGCharacterCreate:
         dmg_mp=self.MP + np.random.randint(20,81,1)  #each damage roll for attack is character's MP + a random bonus of 20 to 80
         return dmg_mp
 
-    #method: damage taken from enemy
+    #method: hero damage taken
     def CharDamageTaken(self,DamageReceived):
         self.DamageReceived = DamageReceived
-        #print("You strike the enemy and deliver the damage")
         self.HP = max(0,self.HP - self.DamageReceived)
 
-
-#Define details to create an enemy character
-#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)
-enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  #values are HP, base damage, additional damage low, additional damage high
 
 
 #Define an enemy class with methods for attack and defend
@@ -80,14 +75,14 @@ class EnemyCreate:
         self.EnemyExtraDamageLow = EnemyExtraDamageLow
         self.EnemyExtraDamageHigh = EnemyExtraDamageHigh
 
-    #Define enemy attack as a method
+    #method: enemy attack
     def EnemyAttack(self,base,modifier_low, modifier_high):
         self.base = base
         self.modifier_low = modifier_low
         self.modifier_high = modifier_high
         return self.base + np.random.randint(self.modifier_low,self.modifier_high,1)
 
-    #Define enemy defend as a method
+    #method: enemy damage taken
     def EnemyDamageTaken(self,AttackReceived):
         
         self.DamageApplied = AttackReceived
@@ -103,14 +98,14 @@ class EnemyCreate:
         return self.DamageApplied
 
 
-#Define an enemy class with inheritance that adds a shield
+#Define an enemy class sub with inheritance that adds a shield
 class EnemyCreateWithShield(EnemyCreate):
     def __init__(self,EnemyName,EnemyHP,EnemyBaseDamage,EnemyExtraDamageLow,EnemyExtraDamageHigh,ShieldBlockPct):
         super().__init__(EnemyName,EnemyHP,EnemyBaseDamage,EnemyExtraDamageLow,EnemyExtraDamageHigh)
         self.ShieldBlockPct = ShieldBlockPct
 
 
-    #Define enemy defend with shield as a method and then call the base class method of same name
+    #method: enemy damage taken with chance to defend from shield
     def EnemyDamageTaken(self,AttackReceived):   #consider adding magic attack always passes through shield
         #there is a chance the attack is blocked
         if random.random() <= self.ShieldBlockPct:
@@ -130,6 +125,11 @@ def suspense_build(suspense_message):
         sys.stdout.flush()
         time.sleep(0.5)
     print()
+
+
+#Define details to create an enemy character
+#Create dictionary of possible enemy encounters.  For key-value pairs: Key is name; values are Hit Points (HP) and Attack Points (AP)
+enemy_dict = {"Deceptive Bunny":[600,60,30,60],"Sneaky Marauder":[800,20,20,150]}  #values are HP, base damage, additional damage low, additional damage high
 
 
 
@@ -187,7 +187,7 @@ if initiate_battle.lower() in ["yes","y"]:
     print(f"It is a {EnemyOpponent.EnemyName}")
     if EnemyHasShield:
         print("...and it has a shield!")
-    print("The enemy's HP and AP is unknown")
+    print("The enemy's HP is unknown")
     print(f"\nYour starting HP total is {RPGOutput_Character01.HP}")
 
     #check current hit points
@@ -223,7 +223,7 @@ if initiate_battle.lower() in ["yes","y"]:
             print(f"The {EnemyOpponent.EnemyName} deals total damage of {EnemyAttackAmt}")
             
 
-            #Apply Enemy Attack to modify Hero's HP...
+            #Apply Enemy Attack to reduce Hero's HP...
             RPGOutput_Character01.CharDamageTaken(EnemyAttackAmt)
 
             #...and dtermine if Hero is still alive
